@@ -1,0 +1,143 @@
+what is a web server - https://www.youtube.com/watch?v=9J1nJOivdyw
+
+From a hardware point of view - anything can be a webserver - laptop, rpi
+WEbserver is not about hardware, it is a piece of software that servers web content (generic)
+
+Six things that webservers generally do:
+1. Listens
+2. On a port
+3. For a Request
+4. Sent via a transport protocol
+5. Sends a response 
+6. with the requested resources
+
+1. Listen
+
+Once started the web server will sit there and listen - if nothing comes in then the webserver won't actually do anything
+
+2. On a port
+
+Localhost address: 127.0.0.1
+webserver is listening to a network port provided by the OS the server is running on 
+We can listen to one of the 65,535 ports that can be used for a given protocol
+When started it up - it will listen on one (or as many as configured) ports
+HTTP -> 80 
+HTTPS -> 443 
+automatic ports for protocol - auto routing will occur
+
+One single computer can have many web services running at one time
+
+3. Requests
+
+Communicate via HyperText Transfer Protocol (HTTP) - literally mean text
+Application layer - it is really simple
+Data is seperated into three blocks:
+1st block - start (type of request), request target (specific resource or page), http protocol version
+2nd block - contains key value pairs till a line break - these are the headers of the request
+e.g. host and the type of browser
+3rd block - optional block for a body (isn't there for a GET) - POST request for info 
+
+HTTP is an application layer protocol - the langauge the web browsers speak
+
+4. Sent to a server
+
+So HTTP are application layer protocols but they are sent via Transport Layer Protocol
+
+So HTTP requests are sent via TCP, UDP, FTP etc
+
+5. sends a response
+
+Similar to a response - there is a HTTP code
+So once sent the web server will return a response - HTTP based
+
+So how does the server return the right resource - routing - matching a request to a resource
+Routin seperated into two distinct categories:
+1. Static - web server serving actual files out of a folder - e.g. on your desktop - cheaper and require little resource
+Optimised for ease of use
+2. Dynamic - Page that changes depending on who user is, wouldn't made a load of static pages. Instead you would store the data
+in a DB and then serve it dynamically. In practice this means you route all request to a single file or executable as an entry point to the 
+application.
+
+
+Using express - why? Over regualr nodejs -https://www.youtube.com/watch?v=z7ikpQCWbtQ
+
+express is the industry standard for creating servers in node
+using regualr node requires a lot of code just for basic code like routing, routing actions, checks etc - error prone, insecure and long
+pure nodejs means we write everything on our e.g. php with no framework
+focus on business logic nto repetitive tasks
+
+express builks on node and offers tools and makes writing node apps much easier
+implements nitty gritty functionality of node to focus on the tasks at hands
+Template engine to render html files
+
+Development notes
+
+Route is just something that should happen for a specific type of request
+Get is the basic type of request - so here we are statically serving via the send
+If we fill in http form we will send a post request
+
+So we are doign a few things about learnign requests in express here - this is lines of code from me learning via tutorials
+POST request
+
+//lets just show a post request
+    //default browser will send get request - but will add it to the result URL
+    //sepcify POST users value gets sent to the body of the request
+    //action /result is where the result will be sent
+    res.send(
+        `<h1> What colour is the sky on a clear day?</h1>
+        <form action="/result" method="POST">
+            <input type="text" name="color">
+            <button>Submit Answer</button>
+        </form>
+        `
+    )
+    //res.send("Welcome to our home page");
+
+//so need a new route for post
+app.post("/result", (req, res)=>{
+    res.send("Thank you for submitting the form")
+})
+
+Remeber when you see changes - stop and start server
+If i tried to visit /result whilst it is a post request - it wouldn't let you aas it isn't a get request
+set up a get request you can visit but it won't be the same as that for the post reuqest
+
+The GET and POST are two different types of HTTP requests. GET is used for viewing something, without changing it, while POST is used for changing something. 
+For example, a search page should use GET to get data while a form that changes your password should use POST .
+//use middleware globally - standard option code
+
+//built in part of express that looks at body of post request and will add named properties to reques.body so it easy to access values
+app.use(express.urlencoded({extended: false}));
+
+using nodemon will autmatically quit and restart the service rather than constantly updating - just a resource
+
+Middleware is software that enables one or more kinds of communiccation or connectivity between two or more applications or application
+components in a distributed network. Central concept of how express works
+also apply middle ware for specific routes - this is called a router level middleware
+Often you don't want to do everything in a route in one go
+
+
+app.post("/result", (req, res)=>{
+    //dealing with user input - access value it is sent over - req.body.color json format access - needs enabling as it isnt enabled by defualt in request
+    if (req.body.color == "blue"){
+        res.send("That is correct");
+    } else {
+        res.send("That is incorrect");
+    }
+});
+
+So it is not good to spell put html in a function - we can serve a templating engine stuff like pug, ejs, html as well
+
+Template engine
+
+template engine gets you to use
+
+Now we know what we are doing re the wbesite - maybe we look at using ejs or html based on what we want to do
+So lets plan out the wbesite now and then see what we need to do.
+
+So do we want all the data already there and show css 
+
+Or do we want to pull in data and change data based on inputs and therefore use ejs
+
+Its always better to learn pure html first? Maybe use ejs as data could change and therefore so could web page rather than re writing it
+Could symbolise pulling it in via web page
